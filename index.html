@@ -26,6 +26,8 @@
         </article>
     </div>
     <script>
+        var player1Puntutation = 0;
+        var player2Puntutation = 0;
         var height = 500;
         var width = 600;
         var stepX = 10;
@@ -62,6 +64,7 @@
             moveBall();
             draw();
         }, 1000/fps );
+        
         //capturar los eventos de teclado
         document.onkeydown = function(event) {
             console.log(event);
@@ -97,6 +100,12 @@
             ctx.fillStyle = ball.color;
             ctx.fillRect(ball.x, ball.y,
                      ball.width, ball.height);
+            // dibujamos la puntuacion
+            ctx.fillStyle = '#fff';
+            ctx.font = "30px Arial";
+            ctx.fillText(player1Puntutation, height/4, 50);
+            ctx.fillText(player2Puntutation, (height/4) *3, 50);
+
         }
 
         function moveBall() {
@@ -104,22 +113,42 @@
             if (ball.y >= height - ball.height) {
                 stepY = stepY * -1; 
             }
-            // restringir derecha
-            if (ball.x >= width - ball.width) {
-                stepX = stepX * -1; 
-            }
             // restringir arriba
             if (ball.y <= 0) {
                 stepY = stepY * -1; 
             }
+            //verificar barra derecha 
+            if (ball.x >= width - player2.width - ball.width){
+                if (ball.y >= player2.y && ball.y <= player2.y + player2.height) {
+                    // choca
+                    stepX = stepX * -1;
+                }
+            }
+            //verificar barra izquierda 
+            if (ball.x <= 0 + player1.width){
+                if (ball.y >= player1.y && ball.y <= player1.y + player1.height) {
+                    // choca
+                    stepX = stepX * -1;
+                }
+            }
+            
+            // restringir derecha
+            if (ball.x >= width - ball.width) {
+                stepX = stepX * -1; 
+                player1Puntutation +=1;
+            }
+            
             // restringir derecha
             if (ball.x <= 0) {
-                stepX = stepX * -1; 
+                stepX = stepX * -1;
+                player2Puntutation += 1;
             }
 
             ball.x = ball.x + stepX;
             ball.y = ball.y + stepY;
         }
-    </script>
+        
+        
+   </script>
 </body>
 </html>
